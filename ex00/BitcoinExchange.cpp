@@ -93,13 +93,18 @@ void Btc::readInput(const std::string& filename)
     {
         std::istringstream iss(line);
         std::string date;
-        double amount;
+        double amount = 0;
         std::getline(iss, date, '|');
         iss >> amount;
         std::map<std::string, double>::iterator rateIt = rates.lower_bound(date);
         if (!isValidDate(date))
         {
             std::cout << "Error: bad input => " << date << std::endl;
+            continue;
+        }
+        if (amount == 0)
+        {
+            std::cout << "Error: amount missing => " << date << std::endl;
             continue;
         }
         if (amount < 0)
