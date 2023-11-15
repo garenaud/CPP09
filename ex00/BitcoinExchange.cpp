@@ -84,11 +84,14 @@ void Btc::readInput(const std::string& filename)
     std::ifstream file(filename.c_str());
     if (!file.is_open()) 
     {
-        throw std::runtime_error("Cannot open input file");
+        throw std::runtime_error("⚠️ Cannot open input file ⚠️");
     }
-
     std::string line;
-    std::getline(file, line);
+    if (!std::getline(file, line)) 
+    {
+        throw std::runtime_error("⚠️ Input file is empty or not readable ⚠️");
+    }
+    //std::getline(file, line);
     while (std::getline(file, line)) 
     {
         std::istringstream iss(line);
@@ -99,22 +102,22 @@ void Btc::readInput(const std::string& filename)
         std::map<std::string, double>::iterator rateIt = rates.lower_bound(date);
         if (!isValidDate(date))
         {
-            std::cout << "Error: bad input => " << date << std::endl;
+            std::cout << red << "⚠️ Error: bad input => " << redbg << date << reset << std::endl;
             continue;
         }
         if (amount == 0)
         {
-            std::cout << "Error: amount missing => " << date << std::endl;
+            std::cout << red << "⚠️ Error: amount missing => " << redbg << date << reset << std::endl;
             continue;
         }
         if (amount < 0)
         {
-            std::cout << "Error: not a positive number." << std::endl;
+            std::cout << red << "⚠️ Error: not a positive number." << reset << std::endl;
             continue;
         }
         if (amount > 1000.0)
         {
-            std::cout << "Error: too large number." << std::endl;
+            std::cout << red << "⚠️ Error: too large number." << reset << std::endl;
             continue;
         }
         if (rateIt != rates.begin() && (rateIt == rates.end() || rateIt->first != date)) 
@@ -123,6 +126,7 @@ void Btc::readInput(const std::string& filename)
         }
         double rate = rateIt->second;
         double value = amount * rate;
-        std::cout << date << "=> " << amount << " = " << value << std::endl;
-    }
+        std::cout << green << std::left << std::setw(12) << date << " => "
+          << std::right << std::setw(6) << std::fixed << std::setprecision(2) << amount 
+          << " = " << greenbg << value << reset << std::endl;    }
 }

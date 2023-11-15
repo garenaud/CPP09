@@ -13,13 +13,13 @@ int main(int argc, char* argv[])
     try 
     {
         double result = calculator.calculate(argv[1]);
-        std::cout << result << std::endl;
+        std::cout << green << "Result: " << greenbg << result << reset << std::endl;
     } 
     catch (const std::exception& e) 
     {
         std::cerr << "Error: " << e.what() << std::endl;
         return 1;
     }
-
+    system("leaks RPN");
     return 0;
 }

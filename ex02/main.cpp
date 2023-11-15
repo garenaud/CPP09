@@ -9,5 +9,6 @@ int main(int ac, char* av[])
     }
 	PmergeMe pmergeMe(ac, av);
 	(void)pmergeMe;
+    system("leaks PmergeMe");
     return 0;
 }

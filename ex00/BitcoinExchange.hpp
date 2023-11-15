@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <cstdlib>
 
 const std::string red("\033[0;31m");
 const std::string redbg("\033[0;41m");
