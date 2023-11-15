@@ -47,6 +47,8 @@ PmergeMe::PmergeMe(int ac, char **av){
 
     std::cout << greenbg << "After: " << reset;
     display(inputDeque);
+    std::cout << magentabg << "After: " << reset;
+    display(inputVector);
     std::cout << "Time to process a range of " << inputDeque.size() << " elements with std::deque container: " << time1 << " us" << std::endl;
     std::cout << "Time to process a range of " << inputVector.size() << " elements with std::vector container: " << time2 << " us" << std::endl;
     if (inputDeque == std::deque<int>(inputVector.begin(), inputVector.end()))
@@ -98,6 +100,10 @@ std::deque<int>    PmergeMe::sortDeque(std::deque<int>& arr)
     pairedDeque = makePair(arr);
     separatePairs(pairedDeque, mainList, pendList);
     insertAllWithBinarySearch(mainList, pendList);
+    if (!mainList.empty() && mainList.front() == -1) 
+    {
+        mainList.erase(mainList.begin());
+    }
     return mainList;
 }
 
@@ -109,6 +115,10 @@ std::vector<int>    PmergeMe::sortVector(std::vector<int>& arr)
     pairedVector = makePairVector(arr);
     separatePairsVector(pairedVector, mainList, pendList);
     insertAllWithBinarySearchVector(mainList, pendList);
+    if (!mainList.empty() && mainList.front() == -1) 
+    {
+        mainList.erase(mainList.begin());
+    }
     return mainList;
 }
 
@@ -132,7 +142,6 @@ std::deque<std::pair<int, int> >    PmergeMe::makePair(const std::deque<int>& or
         }
     }
     insertionSortPairs(pairedDeque);
-    //displayPair(pairedDeque);
     return pairedDeque;
 }
 
@@ -158,6 +167,23 @@ std::vector<std::pair<int, int> >    PmergeMe::makePairVector(const std::vector<
     insertionSortPairsVector(pairedVector);
     return pairedVector;
 }
+/* 
+void PmergeMe::insertionSortPairs(std::deque<std::pair<int, int> >& pairedDeque) 
+{
+    for (size_t i = 1; i > pairedDeque.size(); ++i) 
+    {
+        std::pair<int, int> key = pairedDeque[i];
+        size_t j = i;
+        while (j > 0 && pairedDeque[j - 1].first > key.first) 
+        {
+            pairedDeque[j] = pairedDeque[j - 1];
+            --j;
+        }
+        pairedDeque[j] = key;
+    }
+    std::cout << "depuis la fonction = ";
+    displayPair(pairedDeque);
+} */
 
 void PmergeMe::insertionSortPairs(std::deque<std::pair<int, int> >& pairedDeque) 
 {
@@ -165,7 +191,7 @@ void PmergeMe::insertionSortPairs(std::deque<std::pair<int, int> >& pairedDeque)
     {
         std::pair<int, int> key = pairedDeque[i];
         size_t j = i;
-        while (j > 0 && pairedDeque[j - 1].first < key.first) 
+        while (j > 0 && pairedDeque[j - 1].first > key.first) 
         {
             pairedDeque[j] = pairedDeque[j - 1];
             --j;
@@ -180,7 +206,7 @@ void PmergeMe::insertionSortPairsVector(std::vector<std::pair<int, int> >& paire
     {
         std::pair<int, int> key = pairedVector[i];
         size_t j = i;
-        while (j > 0 && pairedVector[j - 1].first < key.first) 
+        while (j > 0 && pairedVector[j - 1].first > key.first) 
         {
             pairedVector[j] = pairedVector[j - 1];
             --j;
@@ -189,13 +215,18 @@ void PmergeMe::insertionSortPairsVector(std::vector<std::pair<int, int> >& paire
     }
 }
 
+
 void PmergeMe::separatePairs(const std::deque<std::pair<int, int> >& pairedDeque, std::deque<int>& mainList, std::deque<int>& pendingList) 
 {
+    std::deque<std::pair<int, int> > pairedDeque1 = pairedDeque;
     for (std::deque<std::pair<int, int> >::const_iterator it = pairedDeque.begin(); it != pairedDeque.end(); ++it) {
         mainList.push_back(it->first);    // Plus grand numéro
         pendingList.push_back(it->second); // Plus petit numéro
     }
-    std::sort(mainList.begin(), mainList.end());
+    //displayPair(pairedDeque1);
+    //display(mainList);
+    //display(pendingList);
+    //std::sort(mainList.begin(), mainList.end());
 
     // Assurez-vous de retirer tous les marqueurs (par exemple, -1 pour les éléments impairs)
     //pendingList.remove(-1);
@@ -203,11 +234,13 @@ void PmergeMe::separatePairs(const std::deque<std::pair<int, int> >& pairedDeque
 
 void PmergeMe::separatePairsVector(const std::vector<std::pair<int, int> >& pairedVector, std::vector<int>& mainList, std::vector<int>& pendingList) 
 {
-    for (std::vector<std::pair<int, int> >::const_iterator it = pairedVector.begin(); it != pairedVector.end(); ++it) {
+    for (std::vector<std::pair<int, int> >::const_iterator it = pairedVector.begin(); it != pairedVector.end(); ++it) 
+    {
         mainList.push_back(it->first);    // Plus grand numéro
         pendingList.push_back(it->second); // Plus petit numéro
     }
-    std::sort(mainList.begin(), mainList.end());
+    display(mainList);
+    //std::sort(mainList.begin(), mainList.end());
 
     // Assurez-vous de retirer tous les marqueurs (par exemple, -1 pour les éléments impairs)
     //pendingList.remove(-1);
